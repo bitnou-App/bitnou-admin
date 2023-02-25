@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import MUIDataTable from 'mui-datatables';
-import { debounce } from 'lodash';
-import { buildURLQuery } from 'helpers/buildURLQuery';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import React, { useState } from "react";
+import MUIDataTable from "mui-datatables";
+import { debounce } from "lodash";
+import { buildURLQuery } from "helpers/buildURLQuery";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 
 const DataTable = (props) => {
   const { title, data, columns, setQuery, onEdit, onDelete, download } = props;
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   const debouncedSearch = debounce(async (text) => {
-    setSearch(text == null ? '' : text);
-    setQuery(buildURLQuery({ page, limit, search: text == null ? '' : text }));
+    setSearch(text == null ? "" : text);
+    setQuery(buildURLQuery({ page, limit, search: text == null ? "" : text }));
   }, 1000);
 
   const options = {
@@ -29,17 +29,20 @@ const DataTable = (props) => {
     selectableRows: false,
     sort: false,
     onTableChange: (action, tableState) => {
+      console.log(action);
       switch (action) {
-        case 'changePage':
+        case "changePage":
           setPage(tableState.page + 1);
-          setQuery(buildURLQuery({ page, limit, search }));
+          setQuery(buildURLQuery({ page: tableState.page + 1, limit, search }));
           break;
-        case 'changeRowsPerPage':
+        case "changeRowsPerPage":
           setLimit(tableState.rowsPerPage);
           setPage(1);
-          setQuery(buildURLQuery({ page, limit, search }));
+          setQuery(
+            buildURLQuery({ page: 1, limit: tableState.rowsPerPage, search })
+          );
           break;
-        case 'search':
+        case "search":
           debouncedSearch(tableState.searchText);
           break;
         default:
@@ -52,9 +55,10 @@ const DataTable = (props) => {
       title={title}
       data={data.results}
       columns={columns.concat({
-        name: 'id',
-        label: 'Actions',
+        name: "id",
+        label: "Actions",
         options: {
+          download: false,
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <>
@@ -73,7 +77,7 @@ const DataTable = (props) => {
                       onDelete(value);
                     }}
                   >
-                    <DeleteIcon style={{ color: 'red' }} />
+                    <DeleteIcon style={{ color: "red" }} />
                   </span>
                 )}
               </>

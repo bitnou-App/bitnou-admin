@@ -119,7 +119,7 @@ const LoginPage = (props) => {
             </Button>
           </div>
         </Form>
-        <Typography variant="caption">&copy; BITNOUID | Admin</Typography>
+        <Typography variant="caption">&copy; BITNOU ID | Admin</Typography>
       </div>
     </div>
   );
